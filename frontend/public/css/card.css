@@ -1,0 +1,31 @@
+.cardBox{
+height: 30rem;
+width: 25rem;
+} 
+
+.card{
+height: 100%;
+width: 100%;
+
+border: none ;
+}
+
+.card-img-top {
+height: 23rem;
+width: 100%;
+
+object-fit: cover;
+
+border-radius: 1rem;
+}
+
+.cardPrice{
+font-size: large ;
+} 
+
+
+.card-img-top:hover{
+    opacity: 0.8;
+}
+
+

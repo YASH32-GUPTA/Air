@@ -1,0 +1,52 @@
+.mainBox{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 100%;
+    width: 100%;
+
+    margin-top: 10%;
+}
+
+
+.mainTitle{
+    margin-top: 1%;
+
+    text-align: center;
+}
+
+.helperDiv{
+    height: 35vh;
+}
+
+.Custombutton{
+    height: 2.5rem;
+    width: 7rem;
+
+    margin-top: 2% !important;
+}
+
+.mainTitle h2{
+    color: #FF5A5F !important;
+}
+
+@media(max-width:600px){
+
+    .helperDiv{
+        height: 40vh;
+    }
+    
+}
+
+
+/* Login  */
+@media(max-width:1000px){
+
+    .helperDiv{
+        height: 100vh;
+    }
+    
+}
+
+

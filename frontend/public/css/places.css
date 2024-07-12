@@ -1,0 +1,7 @@
+.places{
+    display: flex;
+    flex-wrap: wrap;
+
+    margin: 2% 3.5%;
+}
+

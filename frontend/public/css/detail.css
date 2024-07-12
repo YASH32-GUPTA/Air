@@ -1,0 +1,43 @@
+    label{
+    font-weight: 500;
+    color: #333;     
+}
+
+.imgContent{
+   height: 35rem;
+   width: 30rem;
+
+   object-fit: cover;
+}
+
+.imgContent img{
+
+    height: 90%;
+    width: 95%;
+    
+    border-radius: 1rem;
+
+
+    object-fit: cover;
+}
+
+.listingFont{
+    font-size: large;
+}
+
+.buttons{
+    display: flex;
+}
+
+.deleteButton{
+    margin-left: 5%;
+}
+
+.description {
+    text-align: start;
+    width: 80%;
+}
+
+.row>*{
+    padding-right: 0;
+}

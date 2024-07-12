@@ -1,0 +1,41 @@
+.main{
+    overflow-x: hidden;
+}
+
+.font{
+    font-family: "Plus Jakarta Sans", sans-serif !important;
+    color: #333 !important;
+}
+
+
+.header{
+    margin-top: 1%;
+    margin-left: 4%;
+}
+
+.place{
+    cursor: pointer;
+}
+
+.formsHeader{
+    display: flex;
+    justify-content: center;
+
+    margin-bottom: 3%;
+}
+
+
+.formsHeader .header{
+    width: 100%;
+}
+
+.formFooter .mainFooter{
+  height: 100%;
+}
+
+.mainForm{
+    height: 100vh;
+}
+
+
+    

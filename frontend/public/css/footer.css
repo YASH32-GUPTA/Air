@@ -1,0 +1,56 @@
+.mainFooter{
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+    background-color: #ebebeb;
+
+    height: 100%;
+    width: 100%;
+
+
+}
+
+.icons{
+    display: flex;
+    justify-content: center;
+
+    cursor: pointer;
+}
+
+.company{
+    display: flex;
+    justify-content: center;
+
+    color: #333 ;
+}
+
+.company p{
+    font-weight: 500;
+    margin-bottom:0 ;
+}
+
+.terms{
+    display: flex;
+    justify-content: center;
+}
+
+.terms a{
+    color: #333 ;
+    text-decoration: none;
+}
+
+.terms a:hover{
+    text-decoration: underline;
+}
+
+
+/* ALL */
+.space{
+    margin-top: 1%;
+}
+
+.spaceIcon{
+ margin: 0 10%;
+}

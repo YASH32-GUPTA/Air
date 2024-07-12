@@ -1,0 +1,26 @@
+.mainAlert{
+    display: flex;
+    justify-content: center;
+    align-items: center ;
+
+    width: 100%;
+    margin-top: 1%;
+}
+
+.css-1140ve2-MuiPaper-root-MuiAlert-root {
+    width: 40%;
+}
+
+.css-1pxa9xg-MuiAlert-message { 
+    font-size: 1rem;
+    font-weight: bold;
+
+
+    font-family: "Plus Jakarta Sans", sans-serif !important;
+    color: #333 !important;
+}
+
+
+.css-1pxa9xg-MuiAlert-message {
+    padding: 11px 0 !important;
+}
