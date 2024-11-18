@@ -15,12 +15,17 @@ import {ListingUpdateForm} from '../pages/UpdateListing/ListingUpdateForm.jsx';
 import { Error } from '../pages/Error/Error.jsx';
 import { SignUp } from '../pages/Authentication/SignUp.jsx';
 import { LogIn } from '../pages/Authentication/Login.jsx';
+import Category from '../pages/Category/Category.jsx';
+import Chat from '../pages/Chat/Chat.jsx';
+import { PageNotFound } from '../pages/Error/PageNotFound.jsx';
 
 // Redux 
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchError } from '../features/toolkit.js';
-import { PageNotFound } from '../pages/Error/PageNotFound.jsx';
+import { fetchError, setOnlineUsers, setSocket } from '../features/toolkit.js';
+import { isLoggedWithDetails } from '../pages/Authentication/IsLogginIn.js';
 
+// Socket 
+import io from 'socket.io-client'
 
 
 
@@ -30,10 +35,15 @@ const App = () => {
   const dispatch  = useDispatch(); 
   let refresh = useSelector((State)=> State.toolkit.refresh) ; 
   let mainRefresh = useSelector((State)=> State.toolkit.mainPageRefresh)
-  console.log(mainRefresh) ;
 
   // DATABASE DATA 
   const [data , setData ] = useState([{}]) ;
+  // console.log(data) ;
+
+  // Socket 
+  let socket = useSelector((State)=>State.toolkit.socket) ;
+  let authUser = useSelector((State)=> State.toolkit.checkAuth) ;
+ 
 
   useEffect(()=>{
      
@@ -59,6 +69,46 @@ const App = () => {
   },[refresh,mainRefresh])
 
 
+  // Socket 
+  useEffect(()=>{
+
+     async function socketConnect(){
+      //  getting  logged User
+      let authUserDetails = await isLoggedWithDetails() ; 
+
+      if( authUserDetails ){
+        console.log("Call socket ! ")
+        const socket = io("http://localhost:8080",{
+          query : {
+            userId : authUserDetails.user._id 
+          }    
+        }) ; 
+
+        // first Set Socket : 
+        console.log("socket" ,  socket );
+        dispatch(setSocket(socket)) ;
+
+        socket.on('getOnlineUsers',(onlineUsers)=>{
+           console.log("gonline", onlineUsers) ;
+           dispatch(setOnlineUsers(onlineUsers)) ;
+        }
+
+       )}
+      else{
+         // Clean Up Socket  
+          if(socket){
+            socket.close() ; 
+            dispatch(setSocket(null)) ;
+          }
+      }}
+
+     socketConnect() ; 
+
+  },[authUser])
+
+
+
+
 
   return (
     <div className='main'>
@@ -70,6 +120,8 @@ const App = () => {
                 <Route path="/detail/:id" element={<Details/>}></Route>
                 <Route path="/listing/create" element={<NewListing/>}></Route>
                 <Route path="/listing/:id/edit" element={<ListingUpdateForm/>}></Route>
+                <Route path="/category/:content" element={<Category  data = {data}/>}></Route>
+                <Route path="/chat" element={<Chat data = {data}/>}></Route>
                 <Route path="/error" element={<Error/>}></Route>
                 <Route path="*" element={<PageNotFound/>}></Route>
 

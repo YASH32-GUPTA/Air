@@ -10,7 +10,7 @@ import '../../public/css/mainForm.css';
 import { Footer } from '../../components/Footer/Footer';
 
 // Redux
-import { setAlert } from '../../features/toolkit';
+import { setAlert, setAuth } from '../../features/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -48,6 +48,7 @@ function LogIn() {
 
         if (response.data.success) {
           dispatch(setAlert({ status: true, msg: 'Successfully Login', location: 'home' }));
+          dispatch(setAuth());
           navigate('/');
         } else {
           setFormData({ username: '', password: '' });

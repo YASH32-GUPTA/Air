@@ -11,7 +11,7 @@
 
 .bg-light {
     width: 100% ;
-    justify-content: space-evenly !important;
+    justify-content: space-around !important;
 }
 
 .navIcon .MuiSvgIcon-root {
@@ -28,4 +28,8 @@
 .sessionsIcons{
     margin-right: 0 !important;
     
+}
+
+.mainSearchBar{
+    margin-right: 20%;
 }

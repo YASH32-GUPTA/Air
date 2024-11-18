@@ -1,11 +1,16 @@
+// env 
+import dotenv from 'dotenv' ;
 import express from 'express'
 import mongoose from 'mongoose';
 import cors from 'cors'
-import { listing } from './models/Listings.js';
 import bodyParser from 'body-parser';
 // Schema
+import { listing } from './models/Listings.js';
 import { ListingSchema ,ReviewSchema } from './utils/ValidationSchema.js';
 import { review } from './models/Review.js'
+import { messageModel } from './models/messageModel.js';
+import { conversation } from './models/conversationModel.js';
+
 
 // Session 
 import session from 'express-session';
@@ -14,16 +19,26 @@ import session from 'express-session';
 import { asyncWrap } from './utils/AysncWrap.js';
 import { ExpressError } from './utils/ExpressErrror.js';
 
+
+
+// Keys
+if( process.env.NODE_ENV  != "production"){
+    dotenv.config() ;
+}
+
+
+
 // Authentication 
 import passport from 'passport';
 import LocalStrategy from 'passport-local'
 import { user } from './models/user.js'; 
 
+// Socket 
+import { io ,server ,app,getReceiverSocketId} from './socket/socket.js';
+
+
 // APP WORK 
-const port = 8080 ; 
-const app = express() ; 
-
-
+const port = process.env.PORT ; 
 
 // Session options
 const sessionOptions = {
@@ -49,14 +64,6 @@ passport.use(new LocalStrategy(user.authenticate())) ;
 passport.serializeUser(user.serializeUser()) ;
 passport.deserializeUser(user.deserializeUser()) ;
 
-
-
-// Middlewares
-app.use(cors({
-    origin: 'http://localhost:5174' // Replace this with the origin of your React app
-    ,
-    credentials: true // Allow credentials (cookies, authorization headers)
-}));
 
 
 app.use(bodyParser.json()) ;
@@ -88,7 +95,6 @@ connectDB().then(()=>{
 
 // Validate Add Middleware 
 async function ValidateData(req , res, next ){
-    console.log({ listing : {...req.body}})
     // JOI VALIDATION
     const response = ListingSchema.validate({ listing : {...req.body}}, { abortEarly: false });
         
@@ -96,7 +102,6 @@ async function ValidateData(req , res, next ){
         return next( new ExpressError(404 ,  response.error.message))
     }
     else{
-        console.log("next work")
         next() ;
     }   
 }
@@ -114,12 +119,21 @@ async function ValidateReview(req ,res,next){
       }
 }
 
+// Isloggin As MiddleWare
+const isAuthenticated = ('/islog', (req, res,next) => {
+    if (req.isAuthenticated()) {
+        return next() ;
+    } else {
+        res.json({ loggedIn: false });
+    }
+});
+
 
 // Sign up 
 app.post('/signup', async (req, res, next) => {
     try {
-        const { username, email, password } = req.body;
-        const newUser = new user({ username, email });
+        const { username, email, password , profileImg } = req.body;
+        const newUser = new user({ username, email ,profileImg });
         let registerUser =  await user.register(newUser, password);
 
         req.logIn(registerUser , (err)=>{
@@ -140,7 +154,8 @@ app.post('/login', passport.authenticate('local'), (req, res) => {
     res.json({ success: true, user: req.user });
 });
 
-// Isloggin 
+ 
+// Isloggin  As Api
 app.get('/islog', (req, res) => {
     if (req.isAuthenticated()) {
         res.json({ loggedIn: true, user: req.user });
@@ -148,6 +163,7 @@ app.get('/islog', (req, res) => {
         res.json({ loggedIn: false });
     }
 });
+
 
 // logout : 
 app.get("/logout",(req , res , next )=>{
@@ -162,11 +178,81 @@ app.get("/logout",(req , res , next )=>{
 })
 
 
-// HOME 
-app.get("/",(req , res)=>{
-    res.send("API WORK") ;
-})
+// Messages 
+app.post("/message/send/:id",isAuthenticated,asyncWrap(async (req , res)=>{
 
+
+    const senderId = req.user._id ;  
+    const receiverId = req.params.id ;
+    let {message} = req.body ; 
+    message = message.trim() ; 
+
+    let gotConversation  = await conversation.findOne({
+            participants : { $all : [senderId , receiverId]} 
+    }) ;
+
+    if( !gotConversation ){
+        gotConversation = await conversation.create({
+            participants : [ senderId , receiverId ] 
+        })
+    }
+
+    let newMessage = await messageModel.create({
+        senderId , 
+        receiverId , 
+        message    
+    }) ; 
+
+    if(message){
+        gotConversation.messages.push(newMessage._id)
+    }
+
+    await gotConversation.save() ;
+    await newMessage.save() ;
+
+    // Socket : 
+    const receiverSocketId = getReceiverSocketId(receiverId) ;
+
+    console.log("this is receiver id " , receiverSocketId) ;
+
+    if( receiverSocketId ){
+        io.to(receiverSocketId).emit("newMessage",newMessage) ;
+    }
+
+
+    res.send({ get : true }) ;
+
+ }))
+
+
+//  get Message  
+app.get("/message/:id",isAuthenticated,asyncWrap(async(req , res )=>{
+
+    const senderId = req.user._id ; 
+    const receiverId = req.params.id ; 
+
+    let getMessages = await conversation.findOne({
+        participants : { $all : [senderId , receiverId]}
+    }).populate("messages")  ;  
+    
+
+
+    res.send({ get : true , data : getMessages } ) ;
+
+}))
+
+// get Users 
+app.get("/users",asyncWrap(async(req , res )=>{
+
+    let result = await user.find() ; 
+
+    result = result.filter((data)=> data._id != req.user._id.toString()) ;
+ 
+    res.send({ get : true , data : result }) ; 
+ 
+}))
+
+// HOME 
 
 // Home Data
 app.get("/listings",asyncWrap(async (req ,res)=>{
@@ -176,7 +262,6 @@ app.get("/listings",asyncWrap(async (req ,res)=>{
         return next(new ExpressError(500 ,"Database Error"))
     }
     res.json({ get : true , data : store}) ;
-    console.log("Data has been sent !") ;
 }))
 
 
@@ -184,6 +269,7 @@ app.get("/listings",asyncWrap(async (req ,res)=>{
 app.post("/listing/create" , ValidateData ,asyncWrap(async (req ,res,next)=>{
     let store = new listing(req.body) ;
     store.owner = req.user._id ;
+    store.image  = req.body.image ;
     await store.save() ; 
     res.json({ get : true }) ;
 
@@ -265,10 +351,10 @@ app.use((err , req , res , next)=>{
 
 
 
-// Port Run     
-app.listen(port,()=>{
-    console.log("Port is listening at 8080 ") ;
-})
+// Port And Server Combined   
+server.listen(port , ()=>{
+    console.log(`Server is running on port : ${port}`) ;
+}) ;    
 
 
 

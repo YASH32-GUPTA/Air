@@ -1,4 +1,4 @@
-    label{
+label{
     font-weight: 500;
     color: #333;     
 }
@@ -40,4 +40,113 @@
 
 .row>*{
     padding-right: 0;
+}
+
+/* Image preview */
+.imagePreview{
+    display: flex;
+    flex-direction: column;
+
+    margin: 2% 0;
+}
+
+.preview{
+    border-radius: 1rem;
+
+    width: 25%;
+    height: 25%;
+
+}
+
+.imagePreview img{
+    object-fit: cover;
+}
+
+.cardLowerStyle{
+    display: flex;
+}
+
+.countryFont{
+    width:30% ;
+}
+
+
+.btnLowerStyle{
+    display: flex;
+    align-items: center;
+
+    margin: 0 7%;
+    width: 100%;
+}
+
+#mapSpace{
+    margin-bottom: 0.5% !important;
+}
+
+.reviewLine{
+    margin-top: 3%;
+}
+
+.resizeLowerFonts{
+    font-size: larger;
+}
+
+.form-control {
+    border: 1px solid black ;
+    width: 70%;
+}
+
+.outterReviewBox{
+    width: 100%  !important;
+}
+
+.reviewContent{
+    display: flex;
+    justify-content: space-between;
+}
+.dateFont{
+    font-size: medium;
+}
+
+
+.buttonReview{
+    width: 20%;
+}
+
+.singleReviewBox{
+
+    width:100%;
+
+    border: 1px solid #ccc;
+    border-radius: 10px;
+
+
+    margin-top: 1%;
+    margin-right: 2% !important;
+}
+
+
+.buttonReview {
+    border: 1px solid #000 !important; /* Set the border color */
+    color: #000 !important; /* Set the text color to match */
+  }
+  
+  .buttonReview:hover {
+    background-color: #ccc !important; /* Change background color on hover */
+}
+
+
+.reviewsBox{
+    display: flex;
+    flex-wrap: wrap  ;
+    width: 100% !important;    
+}
+
+
+
+@media (min-width: 768px) {
+    .col-md-4 {
+        flex: 0 0 auto;
+        width: 22.333333%;
+    }
 }

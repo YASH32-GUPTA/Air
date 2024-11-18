@@ -12,7 +12,7 @@ const MainAlert = ({ alertDetails }) => {
       setShowAlert(true);
       const timer = setTimeout(() => {
         setShowAlert(false);
-      }, 5000); 
+      }, 3000); 
 
       return () => clearTimeout(timer); // Clear the timer if the component is unmounted
     }

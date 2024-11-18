@@ -4,6 +4,9 @@ import axios from 'axios';
 // Navigate
 import { useNavigate } from 'react-router-dom';
 
+// css 
+import Form from 'react-bootstrap/Form';
+import '../../public/css/rating.css'
 
 // Parameters
 import { useParams } from 'react-router-dom'
@@ -19,7 +22,10 @@ import { Footer } from '../../components/Footer/Footer';
 import Button from '@mui/material/Button';
 import { Reviews } from './Reviews';
 import { MainAlert } from '../../components/Alert/MainAlert';
-import { isLoggedWithDetails } from '../Authentication/IsLogginIn';
+import { isLogged, isLoggedWithDetails } from '../Authentication/IsLogginIn';
+import { StarRating } from './StarRating';
+import { Map } from './Map';
+import Stats from './Stats';
 
 const Details = () => {
 
@@ -39,6 +45,8 @@ const Details = () => {
     }));
   };
 
+  console.log("~rating",Review) ;
+
 
 
   const { id } = useParams() ;
@@ -48,6 +56,8 @@ const Details = () => {
   const dispatch = useDispatch() ;
   let refresh = useSelector((State)=>State.toolkit.refresh)
   let alertDetails = useSelector((State)=>State.toolkit.alert)
+
+  console.log(placeDetail) ;
 
 
   console.log("pd" , placeDetail) ;
@@ -146,6 +156,8 @@ const Details = () => {
        navigate("/error") ;
      }
   }
+
+
  
   return (
     <div className='row details'>
@@ -159,9 +171,9 @@ const Details = () => {
                 {/* Alert  */}
                 { alertDetails ? alertDetails.location == "details" ?  <MainAlert alertDetails={alertDetails}/> : null : null }
 
-              <span className='formsHeader mt-2'><Header  title = {"Listing Details"}/></span>
+              <span className='formsHeader mt-2 '><Header  title = {placeDetail.title}/></span>
                 <div className="row imgContent detailBox offset-3">
-                    <img src={placeDetail.image} alt="PlaceImage" />
+                    <img src={placeDetail.image.url} alt="PlaceImage" />
                 </div>
 
                 <div className="col placeContent">
@@ -193,15 +205,19 @@ const Details = () => {
                         
                       </div>
 
-                      <div className='font'>
+                      <div className='cardLowerStyle font'>
+
+                        <div className='countryFont'>
                         <h4>Country</h4>
                         <p className='listingFont' >{placeDetail.country}</p>
-                      </div>
-                    
+                        </div>
+
+                      
+                      {/* Buttons  */}
                       {
                         currentUser && currentUser.user ? 
                         currentUser.user._id == placeDetail.owner._id ? 
-                        <div className="buttons">
+                        <div className="btnLowerStyle buttons">
                         <div className="editButton">
                         <Button  variant="outlined" onClick={()=>handleEdit(placeDetail._id)}>Edit Listing</Button>
                         </div>
@@ -215,49 +231,88 @@ const Details = () => {
                         null
                       }
 
+                      </div>
+                    
+                     
+
                 </div>
           </div>
 
+          
+          <div><div className="sepLine"></div></div>
+          {/* Map rener */}
+          <span>
+
+          <span id='mapSpace' className='formsHeader mt-2 mapLocationBox'>
+            <div><h3 className='font'>{"Where you’ll be"}</h3></div>
+            <div className='font subLocation'><h5>{placeDetail.location},&nbsp;{placeDetail.country}</h5></div>
+          </span>
+
+          <div className='mapBox'>
+          <Map locationName={placeDetail.location} />
+          </div>
+
+          </span>
+
+
+          
+      
+                      
+
 
           {/* Form  for Reviews  */}
-          {console.log("place detail" , placeDetail)}
-          {console.log("current user" , currentUser)}
+        
+          <div className='reviewLine'><div className="sepLine"></div></div>
+
+
+          {/* Host and Place Stats  Details  */}
+          <div className="row mt-3 mb-3 formsHeader">
+              
+              <span id='mapSpace' className='mt-2 mapLocationBox'>
+                <div><h3 className='font'>{"Introduction to Host & Place Details"}</h3></div>
+              </span>
+                    
+              {/* Main Stats */}
+              <Stats placeDetail = {placeDetail}/>
+        </div>
+
+
+
+        <div className='reviewLine'><div className="sepLine"></div></div>
 
 
           {
            currentUser != null ?  
-          <div className="row">
-                <h2 className='font'>Review Section</h2>
+          <div className="formsHeader row">
+
+                 <span id='mapSpace' className='mt-2 mapLocationBox'>
+                  <div><h3 className='font'>{"Review"}</h3></div>
+                 </span>
+
                 <div className="row">
 
                     <form onSubmit={handleReview}>
                         {/* rating */}
-                        <div className="rating">
-                            <label htmlFor="rate">Rating</label>
-                            <input
-                            id="rate" type="range" min={1} max={5}
-                            name='rating'
-                            value={Review.rate}
-                            onChange={handleInputChange}
-                            required
-                            />
-
+                        <div className="font rating">
+                            <label htmlFor="rate" className='mb-2 resizeLowerFonts'>Rating</label>
+                            <StarRating handleInputChange = {handleInputChange}/>
                         </div>
+                        
+                       
 
                         {/* Comment  */}
                         <div className="comment">
-                            <label htmlFor="comment">Comment</label>
-                            <textarea 
-                             name="comment" id="comment" cols={50}
-                             value={Review.comment}
-                             onChange={handleInputChange} 
-                             required>
-                            </textarea>
 
+                            <Form.Group  className="mb-3 font" controlId="exampleForm.ControlTextarea1">
+                            <Form.Label className='resizeLowerFonts'>Comment</Form.Label>
+                            <Form.Control  name="comment" as="textarea"  value={Review.comment} rows={3}   onChange={handleInputChange}    required  />
+                            </Form.Group>
+                
                         </div>
+                        
 
                         <div className="reviewButton">
-                            <button>Sumbit</button>
+                        <Button type='submit' variant="outlined" color="primary">Submit</Button>
                         </div>
 
 
@@ -269,9 +324,15 @@ const Details = () => {
           }
 
           {/* Listing Reviews  */}
-          <div className="row mt-3 mb-3">
-              <h2 className='font'>Listed Reviews</h2>
-              { placeDetail  && placeDetail.reviews ? placeDetail.reviews.length > 0 ? <Reviews currentId = { currentUser && currentUser.user ? currentUser.user._id : null } placeId = {placeDetail._id} reviews = {placeDetail.reviews}/> : " Currently No Reviews" : null }
+          <div className="row mt-3 mb-3 formsHeader">
+              
+                <span id='mapSpace' className='mt-2 mapLocationBox'>
+                  <div><h3 className='font'>{"Review Roundup"}</h3></div>
+                </span>
+
+                <div className='font resizeLowerFonts outterReviewBox'>
+                { placeDetail  && placeDetail.reviews ? placeDetail.reviews.length > 0 ? <Reviews currentId = { currentUser && currentUser.user ? currentUser.user._id : null } placeId = {placeDetail._id} reviews = {placeDetail.reviews}/> : " Currently no reviews." : null }
+                </div>
           </div>
 
 

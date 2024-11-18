@@ -1,0 +1,33 @@
+/* #map {
+    height: 40vh;
+    width: 80vh;
+}
+
+ */
+
+
+ html, body, #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .map-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    }
+  
+  #map {
+    width: 80%;
+    height: 600px; /* Adjust as needed */
+    margin: 0 auto; /* Center the map horizontally */
+
+
+    border-radius: 25px;
+
+  }
+  
+  

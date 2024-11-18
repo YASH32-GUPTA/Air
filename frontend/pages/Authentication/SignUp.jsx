@@ -10,9 +10,10 @@ import '../../public/css/mainForm.css';
 import { Footer } from '../../components/Footer/Footer';
 
 // Redux
-import { setAlert } from '../../features/toolkit';
+import { refreshMainPage, setAlert } from '../../features/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { setAuth } from '../../features/toolkit';
 
 import { MainAlert } from '../../components/Alert/MainAlert';
 
@@ -22,17 +23,42 @@ function SignUp() {
     username: '',
     email: '',
     password: '',
+    profileImg: '',
   });
   const alertDetails = useSelector((state) => state.toolkit.alert);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    const { name, value, files } = event.target;
+    if (name === 'image' && files && files[0]) {
+      setFormData({
+        ...formData,
+        profileImg: files[0],
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
+  };
+
+  const handleImageUpload = async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'j7ezqaqw'); // Your upload preset name
+
+    try {
+      const response = await axios.post(
+        'https://api.cloudinary.com/v1_1/diocnfjtx/image/upload',
+        formData
+      );
+      return response.data.secure_url; // URL of the uploaded image
+    } catch (error) {
+      console.error('Error uploading image to Cloudinary', error);
+      throw error;
+    }
   };
 
   const handleSubmit = async (event) => {
@@ -44,13 +70,29 @@ function SignUp() {
       setValidated(true);
     } else {
       try {
-        const response = await axios.post('http://localhost:8080/signup',formData,{withCredentials : true });
+        let profileImgUrl = '';
+
+        if (formData.profileImg) {
+          profileImgUrl = await handleImageUpload(formData.profileImg);
+        }
+
+        const dataToSubmit = {
+          ...formData,
+          profileImg: profileImgUrl,
+        };
+
+        const response = await axios.post(
+          'http://localhost:8080/signup',
+          dataToSubmit,
+          { withCredentials: true }
+        );
 
         if (response.data.success) {
-          dispatch(setAlert({ status: true, msg: 'Successfully Sign Up', location: 'home' }));
+          dispatch(setAlert({ status: true, msg: 'Successfully Signed Up', location: 'home' }));
+          dispatch(setAuth());    
           navigate('/');
         } else {
-          setFormData({ username: '', email: '', password: '' });
+          setFormData({ username: '', email: '', password: '', profileImg: '' });
           dispatch(setAlert({ status: false, msg: response.data.message, location: 'signup' }));
           navigate('/signup');
         }
@@ -117,6 +159,21 @@ function SignUp() {
           />
           <Form.Control.Feedback type="invalid">
             Please provide a valid password.
+          </Form.Control.Feedback>
+          <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+        </Form.Group>
+
+        <Form.Group className="col-md-7" controlId="validationCustomImage">
+          <Form.Label>Profile Picture</Form.Label>
+          <Form.Control
+            type="file"
+            name="image"
+            accept="image/*"
+            onChange={handleChange}
+            required
+          />
+          <Form.Control.Feedback type="invalid">
+            Please provide a profile picture.
           </Form.Control.Feedback>
           <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
         </Form.Group>

@@ -13,6 +13,11 @@ const userSchema = new mongoose.Schema({
         type : String ,
         required : true 
     }
+    ,
+    profileImg : {
+      type : String , 
+      default : "https://static.thenounproject.com/png/5034901-200.png"
+    }
 }) ; 
 
 

@@ -1,0 +1,293 @@
+.chatApp{
+    display: flex;
+    justify-content: center;
+
+    height: 100vh;
+    width: 100%;
+
+    padding: 1% 0.5%;
+
+    background-color: #333333e1;
+}
+
+
+.userSection{
+    height: 96.5vh;
+    width: 30%;
+
+
+    padding: 0.5%;
+
+    border-radius: 1rem;
+
+    background-color:#cccccc08;
+
+    overflow: scroll;
+    overflow-x: overlay;
+}
+
+.customSpace{
+    margin-bottom: 5%;
+}
+
+.chatSection{
+    height: 96.5vh;
+    width: 68%;
+
+    border-radius: 1rem;
+
+    margin-left: 0.5%;
+
+    background-color:#cccccc08;
+
+    overflow: hidden;
+}
+
+
+.userSectionHeader .css-1vm0r4s-MuiPaper-root {
+    width: 95%;
+    background-color: #FFf;
+    margin: 0% auto;
+}
+
+.userSectionHeader{
+    width: 100%;
+
+
+    color: #FFF;
+    padding: 4%;
+    border-radius: 1rem;
+
+    background-color: #3333335d;
+}
+
+
+.userSectionHeader input::placeholder{
+    color: #000 !important;
+    font-weight: 500;
+}
+
+.userListSection{
+
+    display: flex;
+    flex-direction: column;
+
+    height: max-content ;
+    width: 100%;
+
+    padding: 1.5%;
+    margin-top: 2%;
+
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+
+
+    background-color: #3333335d;
+}
+
+
+.userBox{
+    display: flex;
+    align-items: center;
+
+    padding: 4%;
+
+
+}
+
+.userBox .username{
+    color: #fff;
+    margin-left: 4%;
+
+}
+
+
+.css-1wlk0hk-MuiAvatar-root {
+   
+    height: 4rem !important;
+    width: 4rem !important;
+
+    object-fit: cover;
+
+}
+
+
+
+/* Chat Section */
+.userStatus{
+    height: 7rem;
+    width: 100%;
+
+    border-radius: 1rem ;
+    border-bottom-left-radius: 0 ;
+    border-bottom-right-radius: 0 ;
+
+    background-color: #333;
+}
+
+.userBoxStatus{
+    display: flex;
+    align-items: center;
+
+    padding: 2%;
+}
+
+.userInfo{
+    margin-left: 3%;
+}
+
+#fontColor{
+    color: #fff !important;
+}
+
+.content{
+    height: 81%;
+}
+
+.userChat{
+    display: flex;
+    flex: 1;
+    width: 100% !important;
+    height: 10vh !important;
+
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.userInput{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    background-color: #333;
+    padding: 2%;
+}
+
+.userChat .formInput{
+    display: flex;
+}
+
+.sendIcon{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 3rem;
+    width: 3rem;
+
+    background-color: #ebebeb;
+    
+    border-radius: 50%;
+    border: 1px solid #000;
+
+}
+
+/* chat bar  */
+.userChat .form-control {
+    border: 0.8px solid #fff;
+    border-radius: 2rem !important;
+
+    background-color: #EBEBEB;
+
+    width: 100%;
+
+}
+
+.userChat .form-control:focus {
+    color: var(--bs-body-color);
+    background-color: #ebebeb;
+    border-color: #005fff;
+    outline: 0;
+    box-shadow: 0 0 0 0.1rem #005fff;
+}
+
+
+/* Chatting section */
+.senderBox{
+    position: relative;
+    right: -30%;
+
+}
+
+.chatArea{
+    display: flex;
+    flex-direction: column;
+
+    height: 75vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+
+    padding: 3%;
+    padding-right: 1.5%;
+}
+
+
+/* Universal */
+.card{
+    font-size: 1.25rem;
+    color: #ebebeb;
+}
+
+.senderBox .card{
+    color: #fff;
+    background-color: rgba(0,0,0,0.6);
+
+} 
+
+.senderBox  .card-header{
+    border-bottom: var(--bs-card-border-width) solid rgb(255 255 255 / 20%);
+}
+
+.receiverBox .card-header{
+    border-bottom: var(--bs-card-border-width) solid rgb(255 255 255 / 20%);
+}
+
+.receiverBox .card{
+    background-color: #333;
+}
+
+.text-muted {
+    --bs-text-opacity: 1; 
+    color:  #ebebeb !important;
+
+    display: flex;
+    align-items: center;
+}
+
+.card .css-i4bv87-MuiSvgIcon-root {
+    width: 1.5em;
+}
+
+.messageStatus{    
+    position: absolute;
+    bottom: 8% !important;
+    margin-left: 5.9%;
+}
+
+
+.innerMessage{
+    display: flex;
+}
+
+.messageStatus .css-i4bv87-MuiSvgIcon-root{
+    font-size: 1.6rem;
+    color: #006cff;
+}
+
+.MuiCircularProgress-root{
+    width: 30px !important;
+    height: 30px !important;
+}
+
+
+/* Empty messagae  */
+.emptyChat{
+    text-align: center;
+}
+
+.emptyChat h2{
+    color:#ebebeb !important;
+    letter-spacing: 1px;
+}
+

@@ -1,0 +1,85 @@
+.statsBox{
+    display: flex;
+    justify-self: center ;
+    align-items: center;
+
+}
+
+
+.hostDetails{
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+}
+
+
+.hostDetails h5{
+    color: #333333d1;
+}
+
+
+.hostDetails .css-sghohy-MuiButtonBase-root-MuiButton-root {
+    font-family: "Plus Jakarta Sans", sans-serif !important;
+
+    width: 35%;
+    height: 3rem !important;
+
+    border-radius: 0.8rem;
+
+    background-color: #333;
+}
+
+.hostDetails .css-sghohy-MuiButtonBase-root-MuiButton-root:hover{
+    background-color: #000;
+}
+
+
+.mainRatingBox{
+    display: flex ;
+    justify-content: space-between;
+    align-items: center;
+
+    background-color: #cccccc0d;
+}
+
+.mainRatingBox{
+    height: 18rem;
+    width: 45%;
+
+    border:1px solid #ccc ;
+    border-radius: 0.8rem;
+
+    box-shadow: 1px 1px 1px #ccc;
+}
+
+
+.otherSegments {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+
+    height: 92%;
+    width: 60%;
+    border-right: 1px solid #ccc;
+    margin-left: 5%;
+}
+
+
+.innerDetailBox{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+.css-l0h214-MuiResponsiveChart-container {
+    width: 140% !important;
+}
+
+
+.ratingStyle{
+    display: flex;
+    flex-direction: column;
+}
+
+

@@ -4,18 +4,21 @@ import Navbar from 'react-bootstrap/Navbar';
 import ExploreOutlinedIcon from '@mui/icons-material/ExploreOutlined';
 
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { isLogged } from '../../pages/Authentication/IsLogginIn';
-import { fetchError, setAlert } from '../../features/toolkit';  
+import { fetchError, refreshPage, setAlert, setAuth } from '../../features/toolkit';  
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import CustomizedInputBase from '../SearchBar/Search';
+import { Avatar } from '@mui/material';
 
 function MainNavbar() {
 
   const navigate = useNavigate() ;
   const dispatch = useDispatch() ;
+  let refresh = useSelector((State)=>State.toolkit.refresh) ;
   const [ userStatus , setStatus  ] = useState(null) ;
-
+  const [ userDetails , setDetails ] = useState({}) ;
 
   async function handleClick(){
 
@@ -43,11 +46,14 @@ function MainNavbar() {
     else{
       let result = (await axios.get("http://localhost:8080/logout",{withCredentials : true})).data ;
       if(result.success){
-        dispatch(setAlert({status : true , msg : "Successfully Loguut " , location : "home"}))
+        dispatch(refreshPage()) ;
+        dispatch(setAlert({status : true , msg : "Successfully Logout " , location : "home"}))
+        dispatch(setAuth()) ;
         setStatus(false) ;
         navigate("/") ;
       }
       else{
+        console.log("err",result)
         dispatch(fetchError(result)) ;
         navigate("/error") ;
       }
@@ -60,15 +66,17 @@ function MainNavbar() {
         let result  = (await axios.get('http://localhost:8080/islog',{withCredentials : true})).data
         console.log("result" , result )
         if( result.user){
+           setDetails(result) ; 
            setStatus(true) ;
         }
         else{
+          setDetails({}) ; 
           setStatus(false);
         }
     }
 
     getLoggedCheck() ;
-  },[])
+  },[refresh])
 
   return (
     <>
@@ -80,6 +88,12 @@ function MainNavbar() {
             <Nav.Link onClick={handleClick}>Add Listings</Nav.Link>
             <Nav.Link href="#pricing">Pricing</Nav.Link>
           </Nav>
+
+          {/* Nav  bar  */}
+          <div className="mainSearchBar">
+            <CustomizedInputBase/>
+          </div>
+
           <Nav className=" font">
             {userStatus ?  
             <Nav.Link onClick={async ()=> await handleSession("Logout")}>Logout</Nav.Link>
@@ -90,6 +104,11 @@ function MainNavbar() {
             </>
             }
           </Nav>
+
+          <Nav className='userAvatar'>
+              <Avatar src={ userDetails && userDetails.user ? userDetails.user.profileImg : ''}/>
+          </Nav>
+
         </Container>
       </Navbar>
     </>

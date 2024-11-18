@@ -5,6 +5,7 @@ const mongooseURL = 'mongodb://127.0.0.1:27017/Air'  ;
 
 // Custom data
 import { sampleListings } from "./data.js";
+import { user } from "../models/user.js";
 
 
 async function connectDB(){
@@ -24,6 +25,15 @@ async function initData(){
   try{
     await  listing.deleteMany({}) ;
     await  listing.insertMany(sampleListings) ;
+    let allData = await listing.find();
+    allData.map(async (data)=>{
+      data.owner = await user.findById("66915218b7eabed9ce6f760e")
+    })
+    await  listing.deleteMany({}) ;
+    await  listing.insertMany(allData) ;
+
+    
+    
     console.log("Data Set") ;
   }
   catch(error){

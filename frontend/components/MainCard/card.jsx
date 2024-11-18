@@ -7,7 +7,7 @@ function MainCard({ place }) {
   return (
     <div className="cardBox">
       <Card className="h-100">
-        <Card.Img variant="top" src={place.image} />
+        <Card.Img variant="top" src={ place && place.image ? place.image.url : ""} />
         <Card.Body>
           <Card.Title>
             <span className="font"><b>{place.title}</b></span>
